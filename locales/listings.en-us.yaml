@@ -1,0 +1,6 @@
+- id: "listing.created.success"
+  translation: "Listing was successfully created."
+- id: "listing.updated.success"
+  translation: "Listing was successfully updated."
+- id: "listing.destroyed.success"
+  translation: "Listing was successfully destroyed."

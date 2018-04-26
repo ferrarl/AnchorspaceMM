@@ -1,0 +1,6 @@
+- id: "neighborhood.created.success"
+  translation: "Neighborhood was successfully created."
+- id: "neighborhood.updated.success"
+  translation: "Neighborhood was successfully updated."
+- id: "neighborhood.destroyed.success"
+  translation: "Neighborhood was successfully destroyed."

@@ -1,0 +1,31 @@
+<%= f.InputTag("Name") %>
+<%= f.SelectTag("NeighborhoodID", {options: neighborhoods}) %>
+<%= f.InputTag("Address1") %>
+<%= f.InputTag("Address2") %>
+<%= f.InputTag("City") %>
+<%= f.InputTag("State") %>
+<%= f.InputTag("Zipcode") %>
+<%= f.InputTag("PictureUrl") %>
+<%= f.InputTag("VideoUrl") %>
+<%= f.InputTag("ThreeDUrl") %>
+<%= f.InputTag("Size") %>
+<%= if (current_user.IsAdmin) { %>
+  <%= f.SelectTag("ListerID", {options: agents}) %>
+<% } %>
+<%= f.InputTag("DailyPricing") %>
+<%= f.InputTag("MonthlyPricing") %>
+<%= f.InputTag("AnnuallyPricing") %>
+<%= f.InputTag("AbleasingPricing") %>
+<%= f.InputTag("CamRate") %>
+<%= f.InputTag("Attributes") %>
+<%= f.InputTag("Population1") %>
+<%= f.InputTag("Population3") %>
+<%= f.InputTag("Population5") %>
+<%= f.InputTag("MedianIncome1") %>
+<%= f.InputTag("MedianIncome3") %>
+<%= f.InputTag("MedianIncome5") %>
+<%= f.InputTag("WalkScore") %>
+<%= f.InputTag("TrafficScore") %>
+<%= f.SelectTag("Uses", {options: uses}) %>
+<%= f.SelectTag("Terms", {options: terms}) %>
+<button class="btn btn-success" role="submit">Save</button>

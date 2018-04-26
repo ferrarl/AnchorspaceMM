@@ -1,0 +1,19 @@
+<%= f.InputTag("FirstName") %>
+<%= f.InputTag("LastName") %>
+<%= f.InputTag("Email") %>
+<%= f.InputTag("Phone") %>
+<%= if (!current_user.IsAdmin) { %> <small>(Optional)</small><% } %>
+<%= f.InputTag("Company") %>
+<%= f.InputTag("Password", {type: "password"}) %>
+<%= f.InputTag("PasswordConfirmation", {type: "password"}) %>
+<%= if (current_user.IsAdmin) { %>
+  <%= f.CheckboxTag("IsAdmin", {unchecked: false}) %>
+  <%= f.CheckboxTag("IsAgent", {unchecked: false}) %>
+  <%= f.InputTag("SecondaryPhone") %>
+  <%= f.InputTag("PublicEmail") %>
+  <%= f.InputTag("Address1") %>
+  <%= f.InputTag("Address2") %>
+  <%= f.InputTag("City") %>
+  <%= f.InputTag("State") %>
+  <%= f.InputTag("Zipcode") %>
+<% } %>

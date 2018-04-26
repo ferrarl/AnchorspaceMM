@@ -1,0 +1,110 @@
+<div class="page-header">
+  <h1>Listing#Show</h1>
+</div>
+
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= listingsPath() %>" class="btn btn-info">Back to all Listings</a></li>
+  <li><a href="<%= editListingPath({ listing_id: listing.ID })%>" class="btn btn-warning">Edit</a></li>
+  <li><a href="<%= listingPath({ listing_id: listing.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</ul>
+
+<p>
+  <strong>Name</strong>: <%= listing.Name %>
+</p>
+<p>
+    <strong>Neighborhood</strong>: <%= listing.Neighborhood.Name %>
+    <br/>
+    <small><%= listing.Neighborhood.Description %></small>
+</p>
+<p>
+  <strong>Address1</strong>: <%= listing.Address1 %>
+</p>
+<p>
+  <strong>Address2</strong>: <%= listing.Address2 %>
+</p>
+<p>
+  <strong>City</strong>: <%= listing.City %>
+</p>
+<p>
+  <strong>State</strong>: <%= listing.State %>
+</p>
+<p>
+  <strong>Zipcode</strong>: <%= listing.Zipcode %>
+</p>
+<p>
+  <strong>PictureUrl</strong>: <%= listing.PictureUrl %>
+</p>
+<p>
+  <strong>VideoUrl</strong>: <%= listing.VideoUrl %>
+</p>
+<p>
+  <strong>3D Url</strong>: <%= listing.ThreeDUrl %>
+</p>
+<p>
+  <strong>Size</strong>: <%= listing.Size %>
+</p>
+<p>
+    <strong>Lister</strong>: <%= listing.Lister.Name() %>
+</p>
+<p>
+  <strong>DailyPricing</strong>: <%= listing.DailyPricing %>
+</p>
+<p>
+  <strong>MonthlyPricing</strong>: <%= listing.MonthlyPricing %>
+</p>
+<p>
+  <strong>AnnuallyPricing</strong>: <%= listing.AnnuallyPricing %>
+</p>
+<p>
+  <strong>AbleasingPricing</strong>: <%= listing.AbleasingPricing %>
+</p>
+<p>
+  <strong>CamRate</strong>: <%= listing.CamRate %>
+</p>
+<p>
+  <strong>Attributes</strong>: <%= listing.Attributes %>
+</p>
+<p>
+  <strong>Population1</strong>: <%= listing.Population1 %>
+</p>
+<p>
+  <strong>Population3</strong>: <%= listing.Population3 %>
+</p>
+<p>
+  <strong>Population5</strong>: <%= listing.Population5 %>
+</p>
+<p>
+  <strong>MedianIncome1</strong>: <%= listing.MedianIncome1 %>
+</p>
+<p>
+  <strong>MedianIncome3</strong>: <%= listing.MedianIncome3 %>
+</p>
+<p>
+  <strong>MedianIncome5</strong>: <%= listing.MedianIncome5 %>
+</p>
+<p>
+  <strong>WalkScore</strong>: <%= listing.WalkScore %>
+</p>
+<p>
+  <strong>TrafficScore</strong>: <%= listing.TrafficScore %>
+</p>
+<div>
+    <strong>Uses:</strong><br/>
+    <%= if (len(listing.Uses) > 0) { %>
+    <ul>
+        <%= for (use) in listing.Uses { 0%>
+<li>use.Name</li>
+        <% } %>
+    </ul>
+    <% } %>
+</div>
+<div>
+    <strong>Terms:</strong><br/>
+    <%= if (len(listing.Terms) > 0) { %>
+    <ul>
+        <%= for (term) in listing.Terms { 0%>
+        <li>term.Name</li>
+        <% } %>
+    </ul>
+    <% } %>
+</div>

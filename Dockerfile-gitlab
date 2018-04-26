@@ -1,0 +1,17 @@
+FROM alpine
+RUN apk add --no-cache bash
+RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache tzdata
+
+# Comment out to run the binary in "production" mode:
+# ENV GO_ENV=production
+
+WORKDIR /bin/
+
+COPY app .
+
+EXPOSE 3000
+
+# Comment out to run the migrations before running the binary:
+# CMD /bin/app migrate; /bin/app
+CMD /bin/app

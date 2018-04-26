@@ -1,0 +1,6 @@
+- id: "term.created.success"
+  translation: "Term was successfully created."
+- id: "term.updated.success"
+  translation: "Term was successfully updated."
+- id: "term.destroyed.success"
+  translation: "Term was successfully destroyed."

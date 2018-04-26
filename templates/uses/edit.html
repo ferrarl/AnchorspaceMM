@@ -1,0 +1,8 @@
+<div class="page-header">
+  <h1>Edit Use</h1>
+</div>
+
+<%= form_for(use, {action: usePath({ use_id: use.ID }), method: "PUT"}) { %>
+  <%= partial("uses/form.html") %>
+  <a href="<%= usePath({ use_id: use.ID }) %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

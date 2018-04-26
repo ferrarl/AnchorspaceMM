@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1>Terms</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= newTermsPath() %>" class="btn btn-primary">Create New Term</a></li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>Name</th>
+    <th>Type</th>
+    <th>Value</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (term) in terms { %>
+      <tr>
+      <td><%= term.Name %></td>
+        <td><%= term.TypeLabel() %></td>
+        <td><%= term.Value %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= termPath({ term_id: term.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editTermPath({ term_id: term.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= termPath({ term_id: term.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>
