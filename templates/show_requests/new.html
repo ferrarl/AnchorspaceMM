@@ -1,0 +1,8 @@
+<div class="page-header">
+  <h1>New ShowRequest</h1>
+</div>
+
+<%= form_for(showRequest, {action: showRequestsPath(), method: "POST"}) { %>
+  <%= partial("show_requests/form.html") %>
+  <a href="<%= showRequestsPath() %>" class="btn btn-warning" data-confirm="Are you sure?">Cancel</a>
+<% } %>

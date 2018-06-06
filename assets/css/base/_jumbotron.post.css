@@ -1,0 +1,139 @@
+.hero {
+  margin-bottom: 4rem;
+}
+
+
+.jumbotronHero {
+  position: relative;
+  margin-top: -125px;
+  z-index: -1;
+  min-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 5;
+  flex-shrink: 1;
+  width: 100%;
+  justify-content: space-around;
+  background-size: cover;
+  z-index: 11;
+  background-position: 50% 50%;
+  background-image: url('/assets/images/office-bg.jpg');
+
+  &:before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(65, 65, 65, 0.35);
+    z-index: 10;
+  }
+}
+
+.jumbotronHeroTitle{
+  color: #fff;
+  font-size: 5vh;
+  padding-bottom: 0.5rem;
+  text-shadow: 0 0 0.125rem #666;
+  font-weight: 400;
+  text-align: left;
+
+@media (min-width: 768px) {
+  font-size: 7vh;
+}
+}
+
+.jumbotronHeroSearchBar {
+  width: 100%;
+  border-radius: 5px;
+  border-color: transparent;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.5rem;
+  line-height: 1.8;
+  z-index: 9;
+}
+
+.jumbotronHeroButton {
+  width: 100%;
+  /* background-color: rgba(255, 255, 255, 0.75); */
+  border-radius: 5px;
+  border-color: transparent;
+  padding: 0.75rem 1.25rem;
+  font-size: 1.5rem;
+  line-height: 1.8;
+  z-index: 9;
+}
+
+input[type='text'].jumbotronHeroSearchBar::placeholder {
+  color: rgba(65, 65, 65, 0.5);
+  letter-spacing: 0.025rem;
+}
+
+.jumbotron {
+  padding: 75px 0;
+}
+
+.jumbotronHeroContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  z-index: 10;
+  width: 100%;
+}
+
+.jumbotronHeroBody {
+  max-width: 60rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 0 1rem;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+}
+
+.jumbotronFluidTitle,
+.jumbotronFluidText {
+  text-align: left;
+}
+
+.jumbotronFluid {
+  min-height: 37.5vh;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  margin-bottom: 0;
+
+  &:before {
+    content: '';
+    position: relative;
+    width: 100%;
+  }
+}
+
+.jumbotronFluidTitle {
+  font-size: 2.8rem;
+}
+
+.jumbotronFluidText {
+  font-size: 1.25rem;
+}
+
+.jumbotronFluidAction {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, #6ad4ec, #2255c3);
+  border-radius: 0.3rem;
+  border: none;
+  padding: 1rem 1.5rem;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: 0.025rem;
+}

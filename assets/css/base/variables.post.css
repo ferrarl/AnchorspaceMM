@@ -1,0 +1,18 @@
+:root {
+  --base: 20vw;
+  --blue: #1C7CD6;
+  --blue-lighter: color(var(--blue) lightness(+20%) tint(15%));
+  --blue-light: color(var(--blue) lightness(+10%) tint(15%));
+  --blue-medium: color(var(--blue) lightness(-10%) shade(15%));
+  --blue-dark: color(var(--blue) lightness(-20%) shade(15%));
+
+  --bgColor: var(--blue);
+  --fw-200: 200;
+  --fw-800: 800;
+  --fs-xl: 10vh;
+}
+
+@define-mixin size $size {
+    width: $size;
+    height: $size;
+}

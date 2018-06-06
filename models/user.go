@@ -37,6 +37,7 @@ type User struct {
 	Zipcode              nulls.String `json:"zipcode,omitempty" db:"zipcode"`
 	City                 nulls.String `json:"city,omitempty" db:"city"`
 	Listings             Listings     `has_many:"listings"`
+	ShowRequests         ShowRequests `has_many:"show_requests"`
 }
 
 // String is not required by pop and may be deleted

@@ -1,0 +1,14 @@
+<div class="container">
+<h1>Admin Panel</h1>
+<ul class='list-group'>
+<%= if (current_user.IsAdmin) { %>
+  <li class="list-group-item"><a href="/users">User Admin</a></li>
+  <li class="list-group-item"><a href="/neighborhoods">Neighborhood Admin</a></li>
+  <li class="list-group-item"><a href="/show_requests">Show Requests Admin</a></li>
+  <li class="list-group-item"><a href="/terms">Terms Admin</a></li>
+  <li class="list-group-item"><a href="/use">Uses Admin</a></li>
+<% } %>
+<%= if (current_user.IsAgent) { %>
+<% } %>
+</ul>
+</div>

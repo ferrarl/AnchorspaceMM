@@ -45,6 +45,7 @@ type Listing struct {
 	TrafficScore     int           `json:"traffic_score" db:"traffic_score"`
 	Uses             Uses          `many_to_many:"listings_uses"`
 	Terms            Terms         `many_to_many:"listings_terms"`
+	ShowRequests     ShowRequests  `has_many:"show_requests"`
 }
 
 //Uses and Terms required as well

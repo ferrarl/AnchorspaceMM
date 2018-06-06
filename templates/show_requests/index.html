@@ -1,0 +1,35 @@
+<div class="page-header">
+  <h1>ShowRequests</h1>
+</div>
+<ul class="list-unstyled list-inline">
+  <li><a href="<%= newShowRequestsPath() %>" class="btn btn-primary">Create New ShowRequest</a></li>
+</ul>
+
+<table class="table table-striped">
+  <thead>
+  <th>User</th>
+    <th>Listing</th>
+    <th>ActualShowtime</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+    <%= for (showRequest) in showRequests { %>
+      <tr>
+      <td><%= showRequest.User.Name() %></td>
+      <td><%= showRequest.Listing.Name %>(<%= showRequest.Listing.Lister.Name() %>)</td>
+        <td><%= showRequest.ActualShowtime %></td>
+        <td>
+          <div class="pull-right">
+            <a href="<%= showRequestPath({ show_request_id: showRequest.ID }) %>" class="btn btn-info">View</a>
+            <a href="<%= editShowRequestPath({ show_request_id: showRequest.ID }) %>" class="btn btn-warning">Edit</a>
+            <a href="<%= showRequestPath({ show_request_id: showRequest.ID }) %>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+          </div>
+        </td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+<div class="text-center">
+  <%= paginator(pagination) %>
+</div>

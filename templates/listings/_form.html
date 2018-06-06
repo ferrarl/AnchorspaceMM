@@ -1,31 +1,111 @@
-<%= f.InputTag("Name") %>
-<%= f.SelectTag("NeighborhoodID", {options: neighborhoods}) %>
-<%= f.InputTag("Address1") %>
-<%= f.InputTag("Address2") %>
-<%= f.InputTag("City") %>
-<%= f.InputTag("State") %>
-<%= f.InputTag("Zipcode") %>
-<%= f.InputTag("PictureUrl") %>
-<%= f.InputTag("VideoUrl") %>
-<%= f.InputTag("ThreeDUrl") %>
-<%= f.InputTag("Size") %>
+
+<div class="row">
+  <div class="col-md-8">
+    <h3>Listing Name</h3>
+    <%= f.InputTag("Name", {hide_label: true}) %>
+  </div>
+  <div class="col-md-4">
+    <h3>Neighborhood</h3>
+    <%= f.SelectTag("NeighborhoodID", {options: neighborhoods, hide_label: true}) %>
+  </div>
+</div>
+
+<h3>Listing Agent</h3>
 <%= if (current_user.IsAdmin) { %>
-  <%= f.SelectTag("ListerID", {options: agents}) %>
+  <%= f.SelectTag("ListerID", {options: agents, hide_label: true}) %>
 <% } %>
-<%= f.InputTag("DailyPricing") %>
-<%= f.InputTag("MonthlyPricing") %>
-<%= f.InputTag("AnnuallyPricing") %>
-<%= f.InputTag("AbleasingPricing") %>
-<%= f.InputTag("CamRate") %>
+
+<h3>Address</h3>
+<%= f.InputTag("Address1", {hide_label: true, placeholder: "Street Address"}) %>
+<%= f.InputTag("Address2", {hide_label: true, placeholder: "Unit Number"}) %>
+<div class="row">
+  <div class="col-sm">
+    <%= f.InputTag("City", {hide_label: true, placeholder: "City"}) %>
+  </div>
+  <div class="col-sm">
+    <%= f.InputTag("State", {hide_label: true, placeholder: "State"}) %>
+  </div>
+  <div class="col-sm">
+    <%= f.InputTag("Zipcode", {hide_label: true, placeholder: "Zip Code"}) %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md">
+    <h3>Details</h3>
+    <%= f.Label("Size (sqft)") %>
+    <%= f.InputTag("Size", {hide_label: true}) %>
+    <%= f.SelectTag("Uses", {options: uses}) %>
+    <%= f.InputTag("WalkScore") %>
+    <%= f.InputTag("TrafficScore") %>
+  </div>
+  <div class="col-md">
+    <h3>Media</h3>
+    <%= f.FileTag("PrimaryImageFile") %>
+    <img src=<%= listing.PictureUrl %> />
+    <% let youtubeLink = "http://youtu.be/" + listing.VideoUrl %>
+    <%= f.InputTag("", {label: "YouTube URL", id: "youtube-display-field", value: youtubeLink, name: "" }) %>
+    <%= f.HiddenTag("VideoUrl", {id: "video-url-field"}) %>
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe id="video-preview" class="embed-responsive-item" src="https://www.youtube.com/embed/Q0gTpASrRpI" frameborder="0" allow="autoplay; encrypted-media"
+        allowfullscreen width="700" height="307"></iframe>
+    </div>
+    <!-- <%= f.InputTag("ThreeDUrl") %> -->
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-4">
+    <h3>Pricing</h3>
+    <%= f.Label("Daily Pricing") %>
+    <%= f.InputTag("DailyPricing", {hide_label: true}) %>
+    <%= f.Label("Monthly Pricing") %>
+    <%= f.InputTag("MonthlyPricing", {hide_label: true}) %>
+    <%= f.Label("Annual Pricing") %>
+    <%= f.InputTag("AnnuallyPricing", {hide_label: true}) %>
+    <%= f.Label("A/B Leasing Pricing") %>
+    <%= f.InputTag("AbleasingPricing", {hide_label: true}) %>
+    <%= f.InputTag("CamRate") %>
+  </div>
+  <div class="col-md-4 col-sm-6">
+    <h3>Population</h3>
+    <%= f.Label("1 Mile") %>
+    <%= f.InputTag("Population1", {hide_label: true}) %>
+    <%= f.Label("3 Miles") %>
+    <%= f.InputTag("Population3", {hide_label: true}) %>
+    <%= f.Label("5 Miles") %>
+    <%= f.InputTag("Population5", {hide_label: true}) %>
+  </div>
+  <div class="col-md-4 col-sm-6">
+    <h3>Median Income</h3>
+    <%= f.Label("1 Mile") %>
+    <%= f.InputTag("MedianIncome1", {hide_label: true}) %>
+    <%= f.Label("3 Miles") %>
+    <%= f.InputTag("MedianIncome3", {hide_label: true}) %>
+    <%= f.Label("5 Miles") %>
+    <%= f.InputTag("MedianIncome5", {hide_label: true}) %>
+  </div>
+</div>
+
 <%= f.InputTag("Attributes") %>
-<%= f.InputTag("Population1") %>
-<%= f.InputTag("Population3") %>
-<%= f.InputTag("Population5") %>
-<%= f.InputTag("MedianIncome1") %>
-<%= f.InputTag("MedianIncome3") %>
-<%= f.InputTag("MedianIncome5") %>
-<%= f.InputTag("WalkScore") %>
-<%= f.InputTag("TrafficScore") %>
-<%= f.SelectTag("Uses", {options: uses}) %>
+
 <%= f.SelectTag("Terms", {options: terms}) %>
 <button class="btn btn-success" role="submit">Save</button>
+
+<script>
+  $(document).ready(function () {
+    $("#youtube-display-field").on('change', function(e) {
+    url = new URL(e.target.value);
+      id = '';
+      if (url.searchParams.has('v')) {
+        id = url.searchParams.get('v');
+      }
+
+      console.log(url.searchParams.has('v'));
+      $("#video-preview").attr("src", `https://www.youtube.com/embed/${id}`);
+      $("#youtube-display-field").val(`http://youtu.be/${id}`);
+      $("#video-url-field").val(id);
+    });
+  });
+</script>

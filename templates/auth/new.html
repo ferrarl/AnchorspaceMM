@@ -1,4 +1,11 @@
-<h1>Sign In</h1>
+<div class="container">
+  <h1>Sign In</h1>
+
+  <%= if (current_user) { %>
+    <h3>
+      Currently signed in as <i><%= current_user.Name() %></i>
+    </h3>
+  <% } %>
 
 
 <%= form_for(user, {action: signinPath()}) { %>
@@ -6,3 +13,5 @@
   <%= f.InputTag("Password", {type: "password"}) %>
   <button class="btn btn-success">Sign In!</button>
 <% } %>
+
+</div>

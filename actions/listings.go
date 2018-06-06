@@ -1,12 +1,21 @@
 package actions
 
 import (
+	"bytes"
 	"fmt"
+	"image"
+	"image/jpeg"
+	"image/png"
 	"log"
+	"strings"
 
+	"github.com/disintegration/gift"
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/buffalo/binding"
+	"github.com/gobuffalo/envy"
 	"github.com/gobuffalo/pop"
 	"github.com/gobuffalo/uuid"
+	"github.com/minio/minio-go"
 	"github.com/pkg/errors"
 	"mmgitl.mattclark.guru/Anchorspace/dashboard/models"
 )
@@ -43,10 +52,28 @@ func (v ListingsResource) List(c buffalo.Context) error {
 	// Default values are "page=1" and "per_page=20".
 	q := tx.PaginateFromParams(c.Params())
 
+	if nid := c.Param("NeighborhoodID"); strings.TrimSpace(nid) != "" {
+		q.Where("listings.neighborhood_id = ?", nid)
+		c.Set("selected_neighborhood_id", nid)
+	} else {
+		c.Set("selected_neighborhood_id", "")
+	}
+
 	// Retrieve all Listings from the DB
 	if err := q.Eager().All(listings); err != nil {
 		return errors.WithStack(err)
 	}
+
+	neighborhoods := models.Neighborhoods{}
+	if err := tx.All(&neighborhoods); err != nil {
+		return errors.WithStack(err)
+	}
+	nmap := map[string]string{}
+	nmap["Select neighborhood here"] = ""
+	for _, n := range neighborhoods {
+		nmap[n.Name] = n.ID.String()
+	}
+	c.Set("neighborhoods", nmap)
 
 	// Add the paginator to the context so it can be used in the template.
 	c.Set("pagination", q.Paginator)
@@ -67,9 +94,12 @@ func (v ListingsResource) Show(c buffalo.Context) error {
 	listing := &models.Listing{}
 
 	// To find the Listing the parameter listing_id is used.
-	if err := tx.Eager().Find(listing, c.Param("listing_id")); err != nil {
+	if err := tx.Eager().Eager("ShowRequests.User").Find(listing, c.Param("listing_id")); err != nil {
 		return c.Error(404, err)
 	}
+
+	showRequest := &models.ShowRequest{}
+	c.Set("showRequest", showRequest)
 
 	return c.Render(200, r.Auto(c, listing))
 }
@@ -98,6 +128,21 @@ func (v ListingsResource) New(c buffalo.Context) error {
 // Create adds a Listing to the DB. This function is mapped to the
 // path POST /listings
 func (v ListingsResource) Create(c buffalo.Context) error {
+	var url string
+	if strings.Contains(c.Request().Header.Get("Content-Type"), "multipart/form-data") {
+		f, err := c.File("PrimaryImageFile")
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		if f.Valid() && f.File != nil && f.Filename != "" {
+			url, err = uploadFile(f)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+		}
+	}
+
 	current_user := c.Value("current_user").(*models.User)
 	if !current_user.IsAdmin && !current_user.IsAgent {
 		c.Flash().Add("danger", "You don't have access to that!")
@@ -126,6 +171,10 @@ func (v ListingsResource) Create(c buffalo.Context) error {
 
 	if current_user.IsAgent {
 		listing.ListerID = current_user.ID
+	}
+
+	if url != "" {
+		listing.PictureUrl = url
 	}
 
 	// Validate the data from the html form
@@ -186,6 +235,23 @@ func (v ListingsResource) Edit(c buffalo.Context) error {
 // Update changes a Listing in the DB. This function is mapped to
 // the path PUT /listings/{listing_id}
 func (v ListingsResource) Update(c buffalo.Context) error {
+	var url string
+
+	if strings.Contains(c.Request().Header.Get("Content-Type"), "multipart/form-data") {
+		f, err := c.File("PrimaryImageFile")
+		if err != nil {
+			fmt.Println(err)
+			return errors.WithStack(err)
+		}
+
+		if f.Valid() && f.File != nil && f.Filename != "" {
+			url, err = uploadFile(f)
+			if err != nil {
+				return errors.WithStack(err)
+			}
+		}
+	}
+
 	current_user := c.Value("current_user").(*models.User)
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -207,7 +273,6 @@ func (v ListingsResource) Update(c buffalo.Context) error {
 	if (!current_user.IsAdmin && !current_user.IsAgent) || (current_user.IsAgent && listing.ListerID != current_user.ID) {
 		c.Flash().Add("danger", "You don't have access to that!")
 		return c.Render(404, r.HTML("index.html"))
-
 	}
 
 	listerID := listing.ListerID
@@ -215,6 +280,10 @@ func (v ListingsResource) Update(c buffalo.Context) error {
 	// Bind Listing to the html form elements
 	if err := c.Bind(listing); err != nil {
 		return errors.WithStack(err)
+	}
+
+	if url != "" {
+		listing.PictureUrl = url
 	}
 
 	listing.ListerID = listerID
@@ -334,4 +403,101 @@ func (v ListingsResource) SetupForms(c buffalo.Context, tx *pop.Connection) erro
 	c.Set("terms", tmap)
 
 	return nil
+}
+
+func uploadFile(file binding.File) (string, error) {
+	// get the file extension for a file, or else
+	fileParts := strings.Split(file.Filename, ".")
+	fileExt := fileParts[len(fileParts)-1]
+	if fileExt != "jpg" && fileExt != "jpeg" && fileExt != "png" {
+		return "", errors.New("invalid file extension used on submitted image")
+	}
+
+	ssl := true
+	endpoint := "nyc3.digitaloceanspaces.com"
+	key := envy.Get("SPACES_KEY", "")
+	secret := envy.Get("SPACES_SECRET", "")
+	bucket := envy.Get("BUCKET_NAME", "")
+
+	// validate presence of env vars
+	if key == "" || secret == "" || bucket == "" {
+		return "", errors.New("environment vars not set properly for uploading files")
+	}
+
+	// setup minio client
+	minioClient, err := minio.New(endpoint, key, secret, ssl)
+	if err != nil {
+		return "", err
+	}
+
+	// verify that expected bucket exists
+	exists, err := minioClient.BucketExists(bucket)
+	if err != nil {
+		return "", err
+	}
+	if !exists {
+		return "", errors.New("specified bucket does not exist")
+	}
+
+	img, err := decodeImage(file, fileExt == "png")
+	if err != nil {
+		return "", err
+	}
+
+	imgBuf, err := resizeImage(img)
+	if err != nil {
+		return "", err
+	}
+
+	upload := bytes.NewReader(imgBuf.Bytes())
+
+	// get new uuid filename
+	filename, err := uuid.NewV4()
+	if err != nil {
+		return "", err
+	}
+
+	uploadLoc := filename.String() + ".jpg"
+
+	options := minio.PutObjectOptions{
+		ContentType:  "image/jpeg",
+		UserMetadata: map[string]string{"X-Amz-Acl": "public-read"},
+	}
+
+	// do that upload thing
+	if _, err = minioClient.PutObject(bucket, uploadLoc, upload, int64(imgBuf.Len()), options); err != nil {
+		return "", err
+	}
+
+	// build url
+	url := "https://" + bucket + "." + endpoint + "/" + uploadLoc
+
+	return url, nil
+}
+
+func decodeImage(file binding.File, isPng bool) (image.Image, error) {
+	var img image.Image
+	var err error
+	if isPng {
+		img, err = png.Decode(file)
+	} else {
+		img, err = jpeg.Decode(file)
+	}
+	file.Close()
+	return img, err
+}
+
+func resizeImage(img image.Image) (*bytes.Buffer, error) {
+	buf := new(bytes.Buffer)
+
+	// setup resize action/params
+	g := gift.New(gift.ResizeToFill(700, 350, gift.LanczosResampling, gift.CenterAnchor))
+
+	// make a destination
+	dst := image.NewNRGBA(g.Bounds(img.Bounds()))
+	// RESIZE!
+	g.Draw(dst, img)
+
+	err := jpeg.Encode(buf, dst, nil)
+	return buf, err
 }

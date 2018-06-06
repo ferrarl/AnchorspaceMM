@@ -1,0 +1,44 @@
+.navbar {
+  z-index: 9999;
+
+  &-brand {
+    > img {
+      height: 32px;
+      width: auto;
+    }
+  }
+}
+.nav-link {
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration-color: transparent;
+
+  @media (max-width: 544px) {
+    line-height: 2;
+    text-align: left;
+    margin-left: 1.5rem;
+  }
+
+  &:hover,
+  &:active {
+    color: white;
+    text-decoration: underline!important; /* don't use important */
+    text-decoration-color: currentColor;
+    text-decoration-skip: ink;
+  }
+}
+
+.navbar-toggle {
+    background-color: transparent;
+    position: absolute;
+    right: 0;
+    margin-right: 1.5rem;
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: white;
+    border-color: transparent;
+    z-index: 2;
+}

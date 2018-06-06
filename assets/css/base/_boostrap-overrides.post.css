@@ -1,0 +1,34 @@
+.jumbotron,
+.jumbrotron-fluid {
+  margin-bottom: 0 !important;
+}
+
+.jumbotronHeroButton {
+  border-radius: 0px !important;
+  border-color: transparent!important;
+  /* padding: .5rem 1rem!important; */
+  font-size: 1.25rem!important;
+  line-height: 1.8!important;
+}
+.dropdown-menu.show {
+  border-radius: 0;
+  border: none;
+  width: 100%;
+}
+
+/* .collapse.show {
+  position: absolute;
+  display: block;
+  top: 0;
+  width: 100%;
+  margin-left: -1rem;
+  padding-top: 60px;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.75);
+}
+
+.collapsing {
+    -webkit-transition: none;
+    transition: none;
+    display: none ;
+} */

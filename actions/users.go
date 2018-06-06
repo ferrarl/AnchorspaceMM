@@ -100,6 +100,8 @@ func (v UsersResource) Show(c buffalo.Context) error {
 		return c.Error(404, err)
 	}
 
+	tx.Load(user)
+
 	return c.Render(200, r.Auto(c, user))
 }
 

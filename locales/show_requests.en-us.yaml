@@ -1,0 +1,6 @@
+- id: "show_request.created.success"
+  translation: "ShowRequest was successfully created."
+- id: "show_request.updated.success"
+  translation: "ShowRequest was successfully updated."
+- id: "show_request.destroyed.success"
+  translation: "ShowRequest was successfully destroyed."

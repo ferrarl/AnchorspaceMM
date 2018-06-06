@@ -1,0 +1,41 @@
+.featuredCards {
+  padding: 2rem 0 3rem;
+
+  &__title {
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 400;
+
+    &:after {
+      content: '';
+      display: block;
+      margin: 0 auto 1.5rem;
+      width: 10%;
+      padding-top: 1.25rem;
+      border-bottom: 0.2225rem solid transparent;
+      border-image: linear-gradient(43deg, rgba(106, 211, 236, 1) 0%, rgba(34, 85, 195, 1) 100%);
+      border-image-slice: 1;
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+.cardGroup {
+  display: flex;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+
+  &__card {
+    flex: 1 1 0%;
+  }
+
+  &__cardDescription {
+    flex: 1 1 auto;
+  }
+}
+
+.cardGroup__card + .cardGroup__card {
+  margin-right: 1rem;
+}

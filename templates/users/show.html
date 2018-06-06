@@ -1,16 +1,87 @@
-<div class="page-header">
-  <h1>User#Show</h1>
+<div class="container">
+  <h3>
+  <%= user.Name() %>
+  <%= if (user.Company) { %>
+    (<%= user.Company %>)
+  <% } %>
+    <%= if (user.IsAdmin) { %>
+      <i class="fa fa-star" style="color:Tomato"></i>
+  <% } %>
+  <%= if (user.IsAgent) { %>
+      <i class="fa fa-building" style="color:Tomato"></i>
+  <% } %>
+  <div class="pull-right">
+    <a href="<%= usersPath() %>" class="btn btn-info">Back to Users</a>
+    <a href="<%= editUserPath({ user_id: user.ID })%>" class="btn btn-primary">Edit</a>
+  </div>
+</h3>
+<hr />
+<h4>Contact Info</h4>
+<div class="row">
+  <div class="col">
+    Email 
+    <br/> 
+    <%= user.Email %>
+  </div>
+  <div class="col">
+    Phone
+    <br />
+    <%= user.Phone %>
+  </div>
 </div>
-
-<ul class="list-unstyled list-inline">
-  <li><a href="<%= usersPath() %>" class="btn btn-info">Back to all Users</a></li>
-  <li><a href="<%= editUserPath({ user_id: user.ID })%>" class="btn btn-warning">Edit</a></li>
-  <li><a href="<%= userPath({ user_id: user.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
-</ul>
-
-<p>
-  <strong>Name</strong>: <%= user.Name() %>
-</p>
-<p>
-  <strong>Email</strong>: <%= user.Email %>
-</p>
+<%= if (user.IsAdmin || user.IsAgent) { %>
+  <div class="row">
+    <div class="col">
+      Public Email
+      <br />
+      <%= user.PublicEmail %>
+    </div>
+    <div class="col">
+      Secondary Phone
+      <br />
+      <%= user.SecondaryPhone %>
+    </div>
+  </div>
+  <br/>
+  Address
+  <br/>
+  <%= user.Address1 %>
+  <br/>
+  <%= user.Address2 %>
+  <br/>
+  <%= user.City %>,
+  <%= user.State %>
+  <%= user.Zipcode %>
+  <hr/>
+  <%= if (user.IsAgent) { %>
+    <h4>
+      Listings
+      <a href="<%= newListingsPath() %>" class="btn btn-success">
+        <i class="fa fa-plus"></i>
+        New Listing
+      </a>
+    </h4>
+    <%= for (listing) in user.Listings { %>
+      <div class="card col-sm-6">
+        <div class="card-body">
+          <h5 class="card-title">
+            <%= listing.Name %>
+          </h5>
+          <p class="card-text">
+            <%= listing.Address1 %>
+            <br />
+            <%= listing.Address2 %>
+            <br />
+            <%= listing.City %>, <%= listing.State %> <%= listing.Zipcode %>
+          </p>
+          <a href="<%= listingPath({ listing_id: listing.ID })%>" class="card-link btn btn-primary">View</a>
+        </div>
+      </div>
+    <% } %>
+  <% } %>
+<% } %>
+<br/>
+<div class="pull-right">
+  <a href="<%= userPath({ user_id: user.ID })%>" data-method="DELETE" data-confirm="Are you sure?" class="btn btn-danger">Destroy</a>
+</div>
+</div>

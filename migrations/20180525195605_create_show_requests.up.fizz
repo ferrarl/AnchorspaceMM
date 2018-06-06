@@ -1,0 +1,7 @@
+create_table("show_requests", func(t) {
+	t.Column("id", "uuid", {"primary": true})
+	t.Column("user_id", "uuid", {})
+	t.Column("listing_id", "uuid", {})
+	t.Column("requested_showtime", "text", {})
+	t.Column("actual_showtime", "timestamp", {})
+})

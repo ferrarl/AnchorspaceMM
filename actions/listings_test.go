@@ -37,9 +37,9 @@ func (as *ActionSuite) Test_ListingsResource_Create() {
 	n := NewListing(as)
 	n.ListerID = u.ID
 	res := as.HTML("/listings").Post(n)
-	fmt.Println("============================")
-	fmt.Printf("%#v\n", res.Result())
-	fmt.Println("============================")
+	//	fmt.Println("============================")
+	//	fmt.Printf("%#v\n", res.Result())
+	//	fmt.Println("============================")
 
 	err := as.DB.First(n)
 

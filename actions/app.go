@@ -6,6 +6,7 @@ import (
 	"github.com/gobuffalo/buffalo/middleware/ssl"
 	"github.com/gobuffalo/envy"
 	"github.com/mclark4386/buffalo_helpers"
+	"github.com/rs/cors"
 	"github.com/unrolled/secure"
 
 	"github.com/gobuffalo/buffalo/middleware/csrf"
@@ -34,12 +35,24 @@ func App() *buffalo.App {
 		//		app.Use(forceSSL())
 
 		if ENV == "development" {
+			c := cors.New(cors.Options{
+				AllowedOrigins:   []string{"*"},
+				AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+				AllowedHeaders:   []string{"*"},
+				AllowCredentials: true,
+				ExposedHeaders:   []string{"Access-Token"},
+			})
+
+			app.PreWares = append(app.PreWares, c.Handler)
+
 			app.Use(middleware.ParameterLogger)
 		}
 
 		// Protect against CSRF attacks. https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 		// Remove to disable this.
+		//		if ENV == "production" {
 		app.Use(csrf.New)
+		//		}
 
 		// Wraps each request in a transaction.
 		//  c.Value("tx").(*pop.PopTransaction)
@@ -67,6 +80,8 @@ func App() *buffalo.App {
 		app.Resource("/uses", UsesResource{})
 		app.Resource("/terms", TermsResource{})
 
+		app.Resource("/show_requests", ShowRequestsResource{})
+		app.GET("/admin/panel", AdminPanel)
 		app.ServeFiles("/", assetsBox) // serve files from the public directory
 	}
 
